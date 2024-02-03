@@ -16,11 +16,22 @@ map.on('locationfound', e => {
 
     marker.addTo(map);
 
+    socket.emit('coordinadasUsuario', e.latlng)
+
 })
 
+socket.on('usuarioConectado', (coords) =>{
 
-const marker = L.marker([-34.672267, -58.439947]);
+    const marker = L.marker([(coords.lat), coords.lng]);
 
-marker.bindPopup('esto es una prueba');
+    marker.bindPopup('Quién será éste?');
 
-marker.addTo(map);
+    marker.addTo(map);
+ 
+});
+
+// const marker = L.marker([-34.672267, -58.439947]);
+
+// marker.bindPopup('esto es una prueba');
+
+// marker.addTo(map);
