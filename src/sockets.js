@@ -9,7 +9,7 @@ module.exports = io => {
         })
 
         socket.on('coordinadasUsuario', coords => {
-            socket.broadcast.emit('usuarioConectado', coords)
+            socket.broadcast.emit('usuarioConectado', coords, userinformation)
         });
     });
 }
