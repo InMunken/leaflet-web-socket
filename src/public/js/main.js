@@ -11,13 +11,7 @@ let locationData;
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 map.locate({ enableHighAccuracy: true })
-map.on('locationfound', e => {
-    locationData = e;
-    const marker = L.marker([e.latlng.lat, e.latlng.lng]);
-    marker.bindPopup('Soy yo el que está acá');
-    marker.addTo(map);
-    socket.emit('coordinadasUsuario', e.latlng)
-})
+
 
 socket.on('usuarioConectado', (coords, userinformation) =>{
     const marker = L.marker([(coords.lat), coords.lng]);
@@ -26,7 +20,14 @@ socket.on('usuarioConectado', (coords, userinformation) =>{
 });
 
 boton.onclick = function() {
-    console.log(locationData)
-    socket.emit('coordinadasUsuario', locationData.latlng)
+    
+    map.on('locationfound', e => {
+        locationData = e;
+        const marker = L.marker([e.latlng.lat, e.latlng.lng]);
+        marker.bindPopup('Soy yo el que está acá');
+        marker.addTo(map);
+        socket.emit('usuarioActualizado', e.latlng)
+    })
 
+    
 }
