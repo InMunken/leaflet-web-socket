@@ -4,27 +4,26 @@ const path = require('path');
 const socketIO = require('socket.io');
 const http = require('http');
 
-//inicialisaciones
+// Initializations
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server)
 
-//settings
+// Settings
 app.engine('ejs', engine);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));    
 
-//rutas
+// Routes
 app.use(require('./routes/'))
 
-//sockets
+// Sockets
 require('./sockets')(io);
 
-
-//static files
+// Static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-//starting the server
+// Starting the server
 server.listen(3001, () => {
-    console.log('Servidor en el puerto 3001')
+    console.log('Server running on port 3001')
 })
