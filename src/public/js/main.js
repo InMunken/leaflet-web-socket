@@ -18,29 +18,31 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 map.locate({ enableHighAccuracy: true })
 
 
-socket.on('usuarioConectado', data =>{
-    marker = L.marker([(data.latlng.lat), data.latlng.lng]);
-    marker.bindPopup(data.nombre);
-    marker.addTo(map);
+socket.on('usuarioConectado', UserList => {
+     UserList.forEach(user => {
+        marker = L.marker([(user.latlng.lat), user.latlng.lng]);
+        marker.bindPopup(user.nombre);
+        marker.addTo(map);
+    });
 });
 
 
 map.on('locationfound', e => {
-        locationData = e;
+    locationData = e;
 
-        map.setView([e.latlng.lat, e.latlng.lng]);
-        marker = L.marker([e.latlng.lat, e.latlng.lng], {autoPanOnFocus: true}); 
-    })
+    map.setView([e.latlng.lat, e.latlng.lng]);
+    marker = L.marker([e.latlng.lat, e.latlng.lng], { autoPanOnFocus: true });
+})
 
 
-boton.onclick = function() {
+boton.onclick = function () {
 
     let nombre = inputName.value;
     console.log(nombre)
 
     marker.bindPopup(nombre);
     marker.addTo(map);
-    socket.emit('usuarioActualizado', {nombre: nombre, latlng: locationData.latlng})
-    
+    socket.emit('usuarioActualizado', { nombre: nombre, latlng: locationData.latlng })
+
     modal.remove()
 }

@@ -1,4 +1,7 @@
-let fldsmdfr = [];
+let Usuarios = 
+[
+    { nombre: 'prueba', latlng: { lat: -34.5719940, lng: -58.5398390 } }
+];
 
 module.exports = io => {
     io.on('connection', (socket) => {
@@ -10,8 +13,9 @@ module.exports = io => {
         })
         
         socket.on('usuarioActualizado', data => {
-            fldsmdfr.push(data);
-            io.emit('usuarioConectado', fldsmdfr)
+            Usuarios.push(data);
+            io.emit('usuarioConectado', Usuarios)
+            console.log(Usuarios)
         });
     });
 
