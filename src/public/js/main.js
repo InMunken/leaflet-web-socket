@@ -17,21 +17,26 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 map.locate({ enableHighAccuracy: true })
 
+socket.on('ingreso',UserList => {
+    UserList.forEach(user => {
+        const markerR = L.marker([(user.latlng.lat), (user.latlng.lng)])
+        markerR.bindPopup(user.nombre);
+        markerR.addTo(map)
+    })   
+})
 
-socket.on('usuarioConectado', UserList => {
-     UserList.forEach(user => {
-        marker = L.marker([(user.latlng.lat), user.latlng.lng]);
-        marker.bindPopup(user.nombre);
-        marker.addTo(map);
-    });
+socket.on('usuarioConectado', data => {
+    marker = L.marker([(data.latlng.lat), data.latlng.lng]);
+    marker.bindPopup(data.nombre);
+    marker.addTo(map);
 });
 
 
 map.on('locationfound', e => {
     locationData = e;
-
     map.setView([e.latlng.lat, e.latlng.lng]);
     marker = L.marker([e.latlng.lat, e.latlng.lng], { autoPanOnFocus: true });
+    
 })
 
 
