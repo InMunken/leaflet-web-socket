@@ -1,6 +1,7 @@
 let Usuarios = 
 [
-    { nombre: 'prueba', latlng: { lat: -34.5719940, lng: -58.5398390 } }
+    { nombre: 'prueba', latlng: { lat: -34.5719940, lng: -58.5398390 } },
+    { nombre: '', latlng: { lat: -34.6237603, lng: -58.8415188 } }
 ];
 
 module.exports = io => {

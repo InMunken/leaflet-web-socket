@@ -31,7 +31,9 @@ body {
   background: #888888;
 
   display: grid;
-  justify-items: center;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-row-gap: 20px;
+  /* justify-items: center; */
 }
 
 #modal span{
@@ -51,5 +53,7 @@ body {
 #modal input{
   display: grid;
   justify-items: center;
+  align-items: center;
   border-radius: 12px;
+  text-align: center;
 }
