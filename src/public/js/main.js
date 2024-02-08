@@ -9,6 +9,9 @@ const inputName = document.getElementById("nombre")
 const boton = document.getElementById("send-button")
 
 let locationData;
+let marker = null;
+
+
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
@@ -16,27 +19,28 @@ map.locate({ enableHighAccuracy: true })
 
 
 socket.on('usuarioConectado', data =>{
-    const marker = L.marker([(data.latlng.lat), data.latlng.lng]);
+    marker = L.marker([(data.latlng.lat), data.latlng.lng]);
     marker.bindPopup(data.nombre);
     marker.addTo(map);
 });
+
+
+map.on('locationfound', e => {
+        locationData = e;
+
+        map.setView([e.latlng.lat, e.latlng.lng]);
+        marker = L.marker([e.latlng.lat, e.latlng.lng], {autoPanOnFocus: true}); 
+    })
+
 
 boton.onclick = function() {
 
     let nombre = inputName.value;
     console.log(nombre)
 
-    map.on('locationfound', e => {
-        locationData = e;
-
-        map.setView([e.latlng.lat, e.latlng.lng]);
-        const marker = L.marker([e.latlng.lat, e.latlng.lng], {autoPanOnFocus: true});
-        marker.bindPopup(nombre);
-        marker.addTo(map);
-        
-        socket.emit('usuarioActualizado', {nombre: nombre, latlng: e.latlng})
-    })
-
-    modal.remove()
+    marker.bindPopup(nombre);
+    marker.addTo(map);
+    socket.emit('usuarioActualizado', {nombre: nombre, latlng: locationData.latlng})
     
+    modal.remove()
 }
