@@ -7,10 +7,6 @@ module.exports = io => {
         socket.on('disconnect', () => {
             console.log("alguien se desconectó! :( : ", userinformation)
         })
-
-        // socket.on('coordinadasUsuario', coords => {
-        //     socket.broadcast.emit('usuarioConectado', coords, userinformation)
-        // });
         
         socket.on('usuarioActualizado', data => {
             socket.broadcast.emit('usuarioConectado', {nombre: data.nombre, latlng: data.latlng})
