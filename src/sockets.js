@@ -12,9 +12,9 @@ module.exports = io => {
         //     socket.broadcast.emit('usuarioConectado', coords, userinformation)
         // });
         
-        socket.on('usuarioActualizado', (coords, usuario) => {
-            socket.broadcast.emit('usuarioConectado', coords, usuario)
-        })
+        socket.on('usuarioActualizado', data => {
+            socket.broadcast.emit('usuarioConectado', {nombre: data.nombre, latlng: data.latlng})
+        });
 
     });
 
