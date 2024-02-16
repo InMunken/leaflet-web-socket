@@ -11,6 +11,9 @@ const boton = document.getElementById("send-button")
 let locationData;
 let marker = null;
 
+var drawControl = new L.Control.Draw()
+map.addControl(drawControl)
+
 
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
