@@ -13,7 +13,13 @@ module.exports = io => {
             
         socket.on('disconnect', () => {
             console.log("alguien se desconectó! :( : ", userinformation)
-        })
+        });
+
+        socket.on('nuevoDibujo', layer =>{
+            console.log("dibujo recibido");
+            console.log("make a console log");
+            socket.broadcast.emit('dibujoDeUser', layer);
+        });
         
         socket.on('usuarioActualizado', data => {
             io.emit('usuarioConectado', {nombre: data.nombre, latlng: data.latlng})

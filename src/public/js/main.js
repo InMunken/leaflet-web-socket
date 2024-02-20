@@ -14,6 +14,18 @@ let marker = null;
 var drawControl = new L.Control.Draw()
 map.addControl(drawControl)
 
+var drawFeatures = new L.FeatureGroup();
+map.addLayer(drawFeatures)
+
+map.on("draw:created", function(e){
+    var type = e.layerType;
+    var layer = e.layer
+    
+    drawFeatures.addLayer(layer);
+    
+    socket.emit(e)
+})
+
 
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
@@ -34,6 +46,10 @@ socket.on('usuarioConectado', data => {
     marker.addTo(map);
 });
 
+socket.on('dibujoDeUser', layer =>{
+    console.log("llegó un dibujo")
+    drawFeatures.addLayer(layer); 
+})
 
 map.on('locationfound', e => {
     locationData = e;
