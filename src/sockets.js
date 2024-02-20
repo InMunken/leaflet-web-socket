@@ -15,10 +15,10 @@ module.exports = io => {
             console.log("alguien se desconectó! :( : ", userinformation)
         });
 
-        socket.on('nuevoDibujo', layer =>{
+        socket.on('nuevoDibujo', data =>{
             console.log("dibujo recibido");
             console.log("make a console log");
-            socket.broadcast.emit('dibujoDeUser', layer);
+            socket.broadcast.emit('dibujoDeUser', data);
         });
         
         socket.on('usuarioActualizado', data => {

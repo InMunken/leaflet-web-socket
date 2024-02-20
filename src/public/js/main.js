@@ -19,12 +19,18 @@ map.addLayer(drawFeatures)
 
 map.on("draw:created", function(e){
     var type = e.layerType;
-    var layer = e.layer
-    
+    var layer = e.layer;
+
     drawFeatures.addLayer(layer);
-    
-    socket.emit(e)
-})
+
+    var data = {
+        layerType: type,
+        latlngs: layer.getLatLngs() 
+    };
+
+    socket.emit('nuevoDibujo', data);
+});
+
 
 
 
@@ -46,10 +52,21 @@ socket.on('usuarioConectado', data => {
     marker.addTo(map);
 });
 
-socket.on('dibujoDeUser', layer =>{
-    console.log("llegó un dibujo")
-    drawFeatures.addLayer(layer); 
-})
+socket.on('dibujoDeUser', (data) => {
+    let layer;
+
+    console.log(data.layerType);
+    if (data.layerType === 'marker') {
+        layer = L.marker(data.latlngs[0]);
+    } else if (data.layerType === 'polyline') {
+        layer = L.polyline(data.latlngs);
+    } else if (data.layerType === 'polygon') {
+        layer = L.polygon(data.latlngs);
+    } 
+
+    layer.addTo(map);
+});
+
 
 map.on('locationfound', e => {
     locationData = e;
