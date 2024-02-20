@@ -18,6 +18,7 @@ module.exports = io => {
         socket.on('nuevoDibujo', data =>{
             console.log("dibujo recibido");
             console.log("make a console log");
+            console.log(data.layerType)
             socket.broadcast.emit('dibujoDeUser', data);
         });
         

@@ -54,6 +54,7 @@ socket.on('usuarioConectado', data => {
 
 socket.on('dibujoDeUser', (data) => {
     let layer;
+    let layerType = data.layerType
 
     console.log(data.layerType);
     if (data.layerType === 'marker') {
@@ -62,11 +63,12 @@ socket.on('dibujoDeUser', (data) => {
         layer = L.polyline(data.latlngs);
     } else if (data.layerType === 'polygon') {
         layer = L.polygon(data.latlngs);
-    } 
+    } else if (data.layerType === 'rectangle') {
+        layer = L.rectangle(data.latlngs);
+    }
 
     layer.addTo(map);
 });
-
 
 map.on('locationfound', e => {
     locationData = e;
