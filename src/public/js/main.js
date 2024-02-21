@@ -61,6 +61,29 @@ socket.on('ingreso-u',UserList => {
     })   
 })
 
+socket.on('ingreso-d', Dibujoslist => {
+    Dibujoslist.forEach(dibujo => {
+
+        const layerTypes = {
+            'marker': L.marker,
+            'polyline': L.polyline,
+            'polygon': L.polygon,
+            'rectangle': L.rectangle
+        };
+    
+        const layerFunction = layerTypes[dibujo.layerType];
+        if (layerFunction) {
+            const layer = dibujo.layerType === 'marker' ? layerFunction(dibujo.latlngs[0]) : layerFunction(dibujo.latlngs);
+            layer.addTo(map);
+        } else {
+            console.error(`Layer type ${dibujo.layerType} not supported`);
+        }
+    })   
+})
+
+
+
+
 // recibe 
 socket.on('usuarioConectado', data => { //info de que alguien se conectó 
     marker = L.marker([(data.latlng.lat), data.latlng.lng]);

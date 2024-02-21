@@ -30,7 +30,7 @@ module.exports = io => {
         socket.on('usuarioActualizado', data => {
             io.emit('usuarioConectado', {nombre: data.nombre, latlng: data.latlng})
             Usuarios.push(data);
-            console.log(Usuarios)
+            console.log("Lista de usuarios: \n", Usuarios)
         });
 
 
@@ -41,6 +41,8 @@ module.exports = io => {
             console.log(data)
 
             Dibujos.push(data)
+
+            console.log("Lista de dibujos: \n", Dibujos)
             socket.broadcast.emit('dibujoDeUser', data);
         });
         
