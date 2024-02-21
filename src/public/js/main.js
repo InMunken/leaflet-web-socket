@@ -73,23 +73,7 @@ socket.on('ingreso-u',UserList => {
 
 socket.on('ingreso-d', Dibujoslist => {
     Dibujoslist.forEach(dibujo => {
-        socket.on('dibujoDeUser', (data) => {
-            let layer;
-            let layerType = data.layerType
-        
-            console.log(data.layerType);
-            if (data.layerType === 'marker') {
-                layer = L.marker(data.latlngs[0]);
-            } else if (data.layerType === 'polyline') {
-                layer = L.polyline(data.latlngs);
-            } else if (data.layerType === 'polygon') {
-                layer = L.polygon(data.latlngs);
-            } else if (data.layerType === 'rectangle') {
-                layer = L.rectangle(data.latlngs);
-            }
-        
-            layer.addTo(map);
-        });
+        addDraw(dibujo)
     })   
 })
 
@@ -105,7 +89,12 @@ socket.on('usuarioConectado', data => { //info de que alguien se conectó
 
 
     socket.on('dibujoDeUser', (data) => { //un dibujo der alguien más 
-        let layer;
+        addDraw(data)
+    });
+
+
+function addDraw(data){
+    let layer;
         let layerType = data.layerType
     
         console.log(data.layerType);
@@ -121,10 +110,7 @@ socket.on('usuarioConectado', data => { //info de que alguien se conectó
         }
     
         layer.addTo(map);
-    });
-
-
-
+}
 // boton.onclick = function () {
 
 //     let nombre = inputName.value;
