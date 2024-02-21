@@ -43,6 +43,12 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 map.locate({ enableHighAccuracy: true })
 
+map.on('locationfound', e => {
+    locationData = e;
+    map.setView([e.latlng.lat, e.latlng.lng]);
+    marker = L.marker([e.latlng.lat, e.latlng.lng], { autoPanOnFocus: true });
+    
+})
 
 //ingreso al web-socket
 
@@ -78,14 +84,6 @@ socket.on('dibujoDeUser', (data) => { //un dibujo der alguien más
         console.error(`Layer type ${data.layerType} not supported`);
     }
 });
-
-
-map.on('locationfound', e => {
-    locationData = e;
-    map.setView([e.latlng.lat, e.latlng.lng]);
-    marker = L.marker([e.latlng.lat, e.latlng.lng], { autoPanOnFocus: true });
-    
-})
 
 
 // boton.onclick = function () {
