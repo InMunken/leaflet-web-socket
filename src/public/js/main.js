@@ -39,6 +39,10 @@ map.on("draw:created", function(e){
         latlng = layer.getLatLng();
         radius = layer.getRadius();
         latlngs = null;
+    } else if(type === 'circlemarker') {
+        latlng = layer.getLatLng();
+        radius = layer.getRadius();
+        latlngs = null;
     } else {
         latlngs = layer.getLatLngs();
         latlng = null;
@@ -54,6 +58,7 @@ map.on("draw:created", function(e){
 
     socket.emit('nuevoDibujo', data);
 });
+
 
 
 //creación del mapa y pedido de locación
@@ -119,10 +124,13 @@ socket.on('usuarioConectado', data => { //info de que alguien se conectó
             layer = L.rectangle(data.latlngs);
         } else if (data.layerType === 'circle') {
             layer = L.circle(data.latlng, {radius: data.radius});
+        } else if (data.layerType === 'circlemarker') {
+            layer = L.circleMarker(data.latlng, {radius: data.radius});
         }
     
         layer.addTo(map);
     }
+    
     
 // boton.onclick = function () {
 
