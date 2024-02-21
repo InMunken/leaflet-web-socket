@@ -29,22 +29,32 @@ map.on("draw:created", function(e){
 
     drawFeatures.addLayer(layer);
 
+    var latlng, latlngs, radius;
+
     if(type === 'marker') {
         latlng = layer.getLatLng();
-        latlngs = null
+        latlngs = null;
+        radius = null;
+    } else if(type === 'circle') {
+        latlng = layer.getLatLng();
+        radius = layer.getRadius();
+        latlngs = null;
     } else {
         latlngs = layer.getLatLngs();
-        latlng = null
+        latlng = null;
+        radius = null;
     }
 
     var data = {
         layerType: type,
         latlngs: latlngs,
-        latlng: latlng
+        latlng: latlng,
+        radius: radius
     };
 
     socket.emit('nuevoDibujo', data);
 });
+
 
 //creación del mapa y pedido de locación
 
@@ -93,9 +103,9 @@ socket.on('usuarioConectado', data => { //info de que alguien se conectó
     });
 
 
-function addDraw(data){
-    let layer;
-        let layerType = data.layerType
+    function addDraw(data){
+        let layer;
+        let layerType = data.layerType;
     
         console.log(data.layerType);
         if (data.layerType === 'marker') {
@@ -107,10 +117,13 @@ function addDraw(data){
             layer = L.polygon(data.latlngs);
         } else if (data.layerType === 'rectangle') {
             layer = L.rectangle(data.latlngs);
+        } else if (data.layerType === 'circle') {
+            layer = L.circle(data.latlng, {radius: data.radius});
         }
     
         layer.addTo(map);
-}
+    }
+    
 // boton.onclick = function () {
 
 //     let nombre = inputName.value;
