@@ -4,12 +4,18 @@ const map = L.map('map-template').setView([-34.572267, -58.439947], 11);
 
 const socket = io();
 
-const modal = document.getElementById("modal")
-const inputName = document.getElementById("nombre")
-const boton = document.getElementById("send-button")
+// const modal = document.getElementById("modal")
+// const inputName = document.getElementById("nombre")
+// const boton = document.getElementById("send-button")
+
+
+//inicio variables
 
 let locationData;
 let marker = null;
+
+
+//manejo de leaflet draw
 
 var drawControl = new L.Control.Draw()
 map.addControl(drawControl)
@@ -31,14 +37,17 @@ map.on("draw:created", function(e){
     socket.emit('nuevoDibujo', data);
 });
 
-
-
+//creación del mapa y pedido de locación
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 map.locate({ enableHighAccuracy: true })
 
-socket.on('ingreso',UserList => {
+
+//ingreso al web-socket
+
+
+socket.on('ingreso-u',UserList => {
     UserList.forEach(user => {
         const markerR = L.marker([(user.latlng.lat), (user.latlng.lng)])
         markerR.bindPopup(user.nombre);
@@ -46,29 +55,30 @@ socket.on('ingreso',UserList => {
     })   
 })
 
-socket.on('usuarioConectado', data => {
+// recibe 
+socket.on('usuarioConectado', data => { //info de que alguien se conectó 
     marker = L.marker([(data.latlng.lat), data.latlng.lng]);
     marker.bindPopup(data.nombre);
     marker.addTo(map);
 });
 
-socket.on('dibujoDeUser', (data) => {
-    let layer;
-    let layerType = data.layerType
+socket.on('dibujoDeUser', (data) => { //un dibujo der alguien más 
+    const layerTypes = {
+        'marker': L.marker,
+        'polyline': L.polyline,
+        'polygon': L.polygon,
+        'rectangle': L.rectangle
+    };
 
-    console.log(data.layerType);
-    if (data.layerType === 'marker') {
-        layer = L.marker(data.latlngs[0]);
-    } else if (data.layerType === 'polyline') {
-        layer = L.polyline(data.latlngs);
-    } else if (data.layerType === 'polygon') {
-        layer = L.polygon(data.latlngs);
-    } else if (data.layerType === 'rectangle') {
-        layer = L.rectangle(data.latlngs);
+    const layerFunction = layerTypes[data.layerType];
+    if (layerFunction) {
+        const layer = data.layerType === 'marker' ? layerFunction(data.latlngs[0]) : layerFunction(data.latlngs);
+        layer.addTo(map);
+    } else {
+        console.error(`Layer type ${data.layerType} not supported`);
     }
-
-    layer.addTo(map);
 });
+
 
 map.on('locationfound', e => {
     locationData = e;
@@ -78,14 +88,14 @@ map.on('locationfound', e => {
 })
 
 
-boton.onclick = function () {
+// boton.onclick = function () {
 
-    let nombre = inputName.value;
-    console.log(nombre)
+//     let nombre = inputName.value;
+//     console.log(nombre)
 
-    marker.bindPopup(nombre);
-    marker.addTo(map);
-    socket.emit('usuarioActualizado', { nombre: nombre, latlng: locationData.latlng })
+//     marker.bindPopup(nombre);
+//     marker.addTo(map);
+//     socket.emit('usuarioActualizado', { nombre: nombre, latlng: locationData.latlng })
 
-    modal.remove()
-}
+//     modal.remove()
+// }
