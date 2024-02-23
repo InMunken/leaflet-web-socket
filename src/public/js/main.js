@@ -9,7 +9,7 @@ const session = new Session("id1", localData)
 const map = L.map('map-template').setView([-34.572267, -58.439947], 11);
 
 const socket = io({
-    query: { token: "mi_token" }
+    query: { session: JSON.stringify(session) }
 });
 
 // const modal = document.getElementById("modal")
