@@ -20,15 +20,27 @@ let Dibujos =
 ]
 
 let Sesiones = 
-[
-
-]
+{
+    
+}
 
 module.exports = io => {
     io.on('connection', (socket) => {
         console.log("usuario conectado con token: ", socket.handshake.query.token);
 
         //manejo de sesión:
+
+        let session = JSON.parse(socket.handshake.query.token);
+
+        if (!Sesiones[session.id]) {
+            Sesiones[session.id] = {
+                sockets: [],
+                data: session.data
+            };
+        }
+
+        Sesiones[session.id].sockets.push(socket);
+
 
 
 
