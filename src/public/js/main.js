@@ -2,7 +2,9 @@
 
 const map = L.map('map-template').setView([-34.572267, -58.439947], 11);
 
-const socket = io();
+const socket = io({
+    query: { token: "mi_token" }
+});
 
 // const modal = document.getElementById("modal")
 // const inputName = document.getElementById("nombre")

@@ -3,7 +3,6 @@ let Usuarios =
     
 ];
 
-
 let Dibujos =
 [
 
@@ -11,6 +10,8 @@ let Dibujos =
 
 module.exports = io => {
     io.on('connection', (socket) => {
+
+        console.log(socket.handshake.query.token);
         //infotmación del socket
         let userinformation = socket.request.connection.remoteAddress
         
