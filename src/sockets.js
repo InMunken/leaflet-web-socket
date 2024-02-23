@@ -1,3 +1,14 @@
+class Sesion {
+    constructor(token, data){
+        this.token = token;
+        this.data = data;
+        this.date = new Date;
+    }
+
+
+    
+}
+
 let Usuarios = 
 [
     
@@ -8,10 +19,21 @@ let Dibujos =
 
 ]
 
+let Sesiones = 
+[
+
+]
+
 module.exports = io => {
     io.on('connection', (socket) => {
+        console.log("usuario conectado con token: ", socket.handshake.query.token);
 
-        console.log(socket.handshake.query.token);
+        //manejo de sesión:
+
+
+
+
+
         //infotmación del socket
         let userinformation = socket.request.connection.remoteAddress
         
