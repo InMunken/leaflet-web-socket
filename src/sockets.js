@@ -4,9 +4,7 @@ class Sesion {
         this.data = data;
         this.date = new Date;
     }
-
-
-    
+ 
 }
 
 let Usuarios = 
@@ -26,24 +24,22 @@ let Sesiones =
 
 module.exports = io => {
     io.on('connection', (socket) => {
-        console.log("usuario conectado con token: ", socket.handshake.query.token);
-
         //manejo de sesión:
+        // let session = JSON.parse(socket.handshake.query.session); //de acá saco el objeto que repersenta la sesión
+        
+        // console.log("usuario conectado con token: ", session.id); 
 
-        let session = JSON.parse(socket.handshake.query.token);
-
-        if (!Sesiones[session.id]) {
-            Sesiones[session.id] = {
-                sockets: [],
-                data: session.data
-            };
-        }
-
-        Sesiones[session.id].sockets.push(socket);
+        console.log(socket.handshake.query.test)
 
 
+        // if (!Sesiones[session.id]) {
+        //     Sesiones[session.id] = {
+        //         sockets: [],
+        //         data: session.data
+        //     };
+        // }
 
-
+        // Sesiones[session.id].sockets.push(socket);
 
 
         //infotmación del socket

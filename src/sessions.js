@@ -4,4 +4,8 @@ class Session {
       this.data = data;
       this.timestamp = new Date();
     }
+
+    getId(){
+      return this.id
+    }
   }
