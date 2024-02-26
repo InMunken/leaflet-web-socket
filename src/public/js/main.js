@@ -1,27 +1,43 @@
 //this is the client.
 localData =
-    [
+[
+    
+]
 
-    ]
-
-const session = new Session("id1", localData)
 
 const map = L.map('map-template').setView([-34.572267, -58.439947], 11);
 
-const socket = io({
-    query: { session: JSON.stringify(session) }
-});
+const session = new Session(token, localData)
+    const socket = io({
+        query: { session: JSON.stringify(session) }
+    });
+    
+    const modal = document.getElementById("modal")
+    const inputName = document.getElementById("nombre")
+    const inputToken = document.getElementById("token")
+    const boton = document.getElementById("send-button")
+    
+    
+    //inicio variables
+    
+    let locationData;
+    let marker = null;
+    let token = null;
+    
+    
+    
+    //previo a conección a socket
+    
+    boton.onclick = function () {
+        
+        let nombre = inputName.value;
+        console.log(nombre)
+        let token = inputToken.value;
+        
+    modal.remove()
+}
 
-// const modal = document.getElementById("modal")
-// const inputName = document.getElementById("nombre")
-// const boton = document.getElementById("send-button")
-
-
-//inicio variables
-
-let locationData;
-let marker = null;
-
+console.log(token)
 
 //manejo de leaflet draw
 
@@ -141,15 +157,3 @@ function addDraw(data) {
     layer.addTo(map);
 }
 
-
-// boton.onclick = function () {
-
-//     let nombre = inputName.value;
-//     console.log(nombre)
-
-//     marker.bindPopup(nombre);
-//     marker.addTo(map);
-//     socket.emit('usuarioActualizado', { nombre: nombre, latlng: locationData.latlng })
-
-//     modal.remove()
-// }
