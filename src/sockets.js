@@ -57,14 +57,14 @@ module.exports = io => {
         });
 
         //Envío de información recolectada durante la sesión
-        socket.emit('ingreso-u', Usuarios)
-        socket.emit('ingreso-d', Dibujos)
+        io.to(session.id).emit('ingreso-u', Usuarios)
+        io.to(session.id).emit('ingreso-d', Dibujos) 
 
 
 
         //manejo de evetos de ubicación
         socket.on('usuarioActualizado', data => {
-            io.emit('usuarioConectado', { nombre: data.nombre, latlng: data.latlng })
+            io.to(session.id).emit('usuarioConectado', { nombre: data.nombre, latlng: data.latlng })
             Usuarios.push(data);
             console.log("Lista de usuarios: \n", Usuarios)
         });
