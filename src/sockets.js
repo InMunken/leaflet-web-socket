@@ -17,10 +17,10 @@ let Dibujos =
 
     ]
 
-let Sesiones =
-{
+let Sesiones = {
 
-}
+
+};
 
 module.exports = io => {
     io.on('connection', (socket) => {
@@ -28,8 +28,6 @@ module.exports = io => {
         let session = JSON.parse(socket.handshake.query.session); //de acá saco el objeto que repersenta la sesión
 
         console.log("usuario conectado con token: ", session.id);
-
-
 
 
         if (!Sesiones[session.id]) {
@@ -51,9 +49,10 @@ module.exports = io => {
         //infotmación del socket
         let userinformation = socket.request.connection.remoteAddress
 
-        console.log("alguien se conectó!: ", userinformation)
+        console.log("alguien se conectó!")
+
         socket.on('disconnect', () => {
-            console.log("alguien se desconectó! :( : ", userinformation)
+            console.log("alguien se desconectó! :( \n")
         });
 
         //Envío de información recolectada durante la sesión
@@ -81,7 +80,7 @@ module.exports = io => {
             console.log("Lista de dibujos: \n", Dibujos)
             console.log("enviando al token", session.id)
 
-            io.to(session.id).emit('dibujoDeUser', data);
+            socket.broadcast.to(session.id).emit('dibujoDeUser', data);
         });
 
     });

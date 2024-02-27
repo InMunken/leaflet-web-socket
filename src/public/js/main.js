@@ -122,6 +122,8 @@ map.on("draw:created", function (e) {
     };
 
     localData.push(data)
+
+    console.log("Todos los dibujos de local data son: ", localData)
     socket.emit('nuevoDibujo', data);
 });
 
