@@ -1,10 +1,10 @@
 class Session {
     constructor(id, data) {
-      this.id = id;
-      this.data = data;
-      this.timestamp = new Date();
+        this.id = id;
+        this.data = data;
+        this.timestamp = new Date();
     }
-  }
+}
 
 //this is the client.
 localData =
@@ -36,21 +36,47 @@ const map = L.map('map-template').setView([-34.572267, -58.439947], 11);
 //previo a conección a socket
 
 boton.onclick = function () {
-    
+
     let nombre = inputName.value;
     console.log(nombre)
 
-    
+
     token = inputToken.value;
     modal.remove()
 
-    session = new Session(token, localData) 
+    session = new Session(token, localData)
     console.log(session)
-   
-   // me conecto al socket una vez que tengo la data sacada del botón 
+
+    // me conecto al socket una vez que tengo la data sacada del botón 
     socket = io({
-       query: { session: JSON.stringify(session) }
-   });
+        query: { session: JSON.stringify(session) }
+    });
+
+    socket.on('ingreso-u', UserList => {
+        UserList.forEach(user => {
+            const markerR = L.marker([(user.latlng.lat), (user.latlng.lng)])
+            markerR.bindPopup(user.nombre);
+            markerR.addTo(map)
+        })
+    })
+
+    socket.on('ingreso-d', Dibujoslist => {
+        Dibujoslist.forEach(dibujo => {
+            addDraw(dibujo)
+        })
+    })
+
+    socket.on('usuarioConectado', data => { //info de que alguien se conectó 
+        marker = L.marker([(data.latlng.lat), data.latlng.lng]);
+        marker.bindPopup(data.nombre);
+        marker.addTo(map);
+    });
+
+    socket.on('dibujoDeUser', (data) => { //un dibujo der alguien más 
+        localData.push(data)
+        addDraw(data)
+    });
+
 }
 
 
@@ -111,42 +137,13 @@ map.on('locationfound', e => {
     locationData = e;
     map.setView([e.latlng.lat, e.latlng.lng]);
     marker = L.marker([e.latlng.lat, e.latlng.lng], { autoPanOnFocus: true });
+    marker.addTo(map)
+
     socket.emit('usuarioActualizado', { nombre: "nombre", latlng: locationData.latlng })
-
 })
 
-//ingreso al web-socket
+//ingreso al web-socket 
 
-
-socket.on('ingreso-u', UserList => {
-    UserList.forEach(user => {
-        const markerR = L.marker([(user.latlng.lat), (user.latlng.lng)])
-        markerR.bindPopup(user.nombre);
-        markerR.addTo(map)
-    })
-})
-
-socket.on('ingreso-d', Dibujoslist => {
-    Dibujoslist.forEach(dibujo => {
-        addDraw(dibujo)
-    })
-})
-
-
-
-
-// recibe 
-socket.on('usuarioConectado', data => { //info de que alguien se conectó 
-    marker = L.marker([(data.latlng.lat), data.latlng.lng]);
-    marker.bindPopup(data.nombre);
-    marker.addTo(map);
-});
-
-
-socket.on('dibujoDeUser', (data) => { //un dibujo der alguien más 
-    localData.push(data)
-    addDraw(data)
-});
 
 
 function addDraw(data) {

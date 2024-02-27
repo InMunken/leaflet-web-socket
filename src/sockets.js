@@ -42,8 +42,11 @@ module.exports = io => {
         Sesiones[session.id].sockets.push(socket);
 
         // Unir el socket a la sala con el mismo id de la sesión
-        socket.join(session.id);
-
+        socket.join(session.id, () => {
+            let rooms = Object.keys(socket.rooms);
+            console.log(rooms); // [socket.id, session.id]
+        });
+        
 
         //infotmación del socket
         let userinformation = socket.request.connection.remoteAddress
@@ -77,7 +80,7 @@ module.exports = io => {
 
             console.log("Lista de dibujos: \n", Dibujos)
             console.log("enviando al token", session.id)
-            
+
             io.to(session.id).emit('dibujoDeUser', data);
         });
 
