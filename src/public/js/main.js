@@ -1,7 +1,15 @@
+class Session {
+    constructor(id, data) {
+      this.id = id;
+      this.data = data;
+      this.timestamp = new Date();
+    }
+  }
+
 //this is the client.
 localData =
     [
-        { hell, hoho }
+
     ]
 
 //inicio variables
@@ -10,17 +18,9 @@ let marker = null;
 let token = "hell";
 
 
-const map = L.map('map-template').setView([-34.572267, -58.439947], 11);
-
-const session = new Session(token, localData)
-// const socket = io({
-//     query: { session: JSON.stringify(session) }
-// });
-
-const socket = io({
-    query: { test: "test" }
-});
-
+let session
+let socket
+//inicio partesd del formulario
 const modal = document.getElementById("modal")
 const inputName = document.getElementById("nombre")
 const inputToken = document.getElementById("token")
@@ -28,20 +28,31 @@ const boton = document.getElementById("send-button")
 
 
 
+//inicio mapa
+const map = L.map('map-template').setView([-34.572267, -58.439947], 11);
+
 
 
 //previo a conección a socket
 
 boton.onclick = function () {
-
+    
     let nombre = inputName.value;
     console.log(nombre)
-    let token = inputToken.value;
 
+    
+    token = inputToken.value;
     modal.remove()
+
+    session = new Session(token, localData) 
+    console.log(session)
+   
+   // me conecto al socket una vez que tengo la data sacada del botón 
+    socket = io({
+       query: { session: JSON.stringify(session) }
+   });
 }
 
-console.log(token)
 
 //manejo de leaflet draw
 
@@ -84,7 +95,7 @@ map.on("draw:created", function (e) {
         radius: radius
     };
 
-    localData.push(Data)
+    localData.push(data)
     socket.emit('nuevoDibujo', data);
 });
 
