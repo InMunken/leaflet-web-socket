@@ -61,7 +61,7 @@ boton.onclick = function () {
     })
 
     socket.on('ingreso-d', Dibujoslist => {
-        Dibujoslist.forEach(dibujo => {
+        Dibujoslist.data.forEach(dibujo => {
             addDraw(dibujo)
         })
     })

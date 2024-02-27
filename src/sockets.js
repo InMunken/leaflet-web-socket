@@ -12,10 +12,7 @@ let Usuarios =
 
     ];
 
-let Dibujos =
-    [
-
-    ]
+let Dibujos = { }
 
 let Sesiones = {
 
@@ -26,18 +23,16 @@ module.exports = io => {
     io.on('connection', (socket) => {
         //manejo de sesión:
         let session = JSON.parse(socket.handshake.query.session); //de acá saco el objeto que repersenta la sesión
-
         console.log("usuario conectado con token: ", session.id);
 
 
-        if (!Sesiones[session.id]) {
-            Sesiones[session.id] = {
-                sockets: [],
+        if (!Dibujos[session.id]) {
+            Dibujos[session.id] = {
                 data: session.data
             };
         }
 
-        Sesiones[session.id].sockets.push(socket);
+        // Sesiones[session.id].sockets.push(socket);
 
         // Unir el socket a la sala con el mismo id de la sesión
         socket.join(session.id, () => {
@@ -57,7 +52,8 @@ module.exports = io => {
 
         //Envío de información recolectada durante la sesión
         io.to(session.id).emit('ingreso-u', Usuarios)
-        io.to(session.id).emit('ingreso-d', Dibujos) 
+        console.log(Dibujos[session.id])
+        io.to(session.id).emit('ingreso-d', Dibujos[session.id]) 
 
 
 
@@ -69,13 +65,17 @@ module.exports = io => {
         });
 
 
-        //manejo de dubujos
+        //manejo de dibujos
         socket.on('nuevoDibujo', data => {
             console.log("dibujo recibido");
             console.log("make a console log");
             console.log(data)
 
-            Dibujos.push(data)
+            if(!Dibujos[session.id]) {
+                Dibujos[session.id] = [];
+            }
+
+            Dibujos[session.id].data.push(data)
 
             console.log("Lista de dibujos: \n", Dibujos)
             console.log("enviando al token", session.id)
