@@ -22,6 +22,7 @@ const modal = document.getElementById("modal");
 const inputName = document.getElementById("nombre");
 const inputToken = document.getElementById("token");
 const boton = document.getElementById("send-button");
+const sendLocal = document.getElementById("send-local")
 
 // Start map
 const map = L.map("map-template").setView([-34.572267, -58.439947], 11);
@@ -31,7 +32,8 @@ boton.onclick = function () {
   let nombre = inputName.value;
 
   token = inputToken.value;
-  modal.remove();
+  
+  //modal.remove();
 
   session = new Session(token, localData);
   console.log(session);
@@ -41,6 +43,8 @@ boton.onclick = function () {
     query: { session: JSON.stringify(session) },
   });
 
+
+  // It recibes the whole user list to add the respective markers
   socket.on("ingreso-u", (UserList) => {
     UserList.forEach((user) => {
       const markerR = L.marker([user.latlng.lat, user.latlng.lng]);
@@ -49,6 +53,7 @@ boton.onclick = function () {
     });
   });
 
+  // It recibes all the session drawings
   socket.on("ingreso-d", (Dibujoslist) => {
     console.log("dibujando todo")
     Dibujoslist.data.forEach((dibujo) => {
@@ -56,6 +61,7 @@ boton.onclick = function () {
     });
   });
 
+  // When ever it recibes a new user it addest it to the map
   socket.on("usuarioConectado", (data) => {
     
     marker = L.marker([data.latlng.lat, data.latlng.lng]);
@@ -63,6 +69,7 @@ boton.onclick = function () {
     marker.addTo(map);
   });
 
+  // When ever it recibes a new drawing is displays on the map
   socket.on("dibujoDeUser", (data) => {
     
     localData.push(data);
@@ -71,7 +78,6 @@ boton.onclick = function () {
 };
 
 //leaflet draw handleing 
-
 var drawControl = new L.Control.Draw();
 map.addControl(drawControl);
 
@@ -111,10 +117,10 @@ map.on("draw:created", function (e) {
     radius: radius,
   };
 
-  localData.push(data);
+  //localData.push(data);
 
   console.log("Todos los dibujos de local data son: ", localData);
-  socket.emit("nuevoDibujo", data);
+  checksAndSend("nuevoDibujo", data);
 });
 
 // Add map and request location
@@ -127,13 +133,15 @@ map.on("locationfound", (e) => {
   locationData = e;
   map.setView([e.latlng.lat, e.latlng.lng]);
   marker = L.marker([e.latlng.lat, e.latlng.lng], { autoPanOnFocus: true });
+  marker.bindPopup(inputName.value)
   marker.addTo(map);
 
-  socket.emit("usuarioActualizado", {
-    nombre: "nombre",
+  checksAndSend("usuarioActualizado",{
+    nombre: inputName.value,
     latlng: locationData.latlng,
   });
 });
+  
 
 
 function addDraw(data) {
@@ -158,4 +166,15 @@ function addDraw(data) {
   }
 
   layer.addTo(map);
+}
+
+function checksAndSend(eventName, data){
+    if (socket) {
+        console.log("Conectado al socket..")
+        console.log("Enviando evento: ", eventName, "...")
+        socket.emit(eventName, data)
+    }else{
+        console.log("Se guardariia en local")
+        localData.push(data);   
+    }
 }
