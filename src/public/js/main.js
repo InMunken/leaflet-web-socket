@@ -29,7 +29,6 @@ const map = L.map("map-template").setView([-34.572267, -58.439947], 11);
 
 boton.onclick = function () {
   let nombre = inputName.value;
-  console.log(nombre);
 
   token = inputToken.value;
   modal.remove();
@@ -51,6 +50,7 @@ boton.onclick = function () {
   });
 
   socket.on("ingreso-d", (Dibujoslist) => {
+    console.log("dibujando todo")
     Dibujoslist.data.forEach((dibujo) => {
       addDraw(dibujo);
     });

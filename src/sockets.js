@@ -29,9 +29,9 @@ module.exports = (io) => {
     });
 
     //Envío de información recolectada durante la sesión
-    io.to(session.id).emit("ingreso-u", Usuarios);
+    socket.emit("ingreso-u", Usuarios);
     console.log(Dibujos[session.id]);
-    io.to(session.id).emit("ingreso-d", Dibujos[session.id]);
+    socket.emit("ingreso-d", Dibujos[session.id]);
 
     //manejo de evetos de ubicación
     socket.on("usuarioActualizado", (data) => {
