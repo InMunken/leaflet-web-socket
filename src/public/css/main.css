@@ -20,20 +20,32 @@ body {
 #modal {
   position: fixed;
   z-index: 5000;
-  top: 50%;
-  left: 50%;
+  
+  top: 116%;
+  left:74%;
   transform: translate(-50%, -50%);
   
   border-radius: 12px;
 
-  height: 200px;
-  width: 200px;
+  height: 260px;
+  width: 210px;
+
+  padding: 8px;
+
   background: #888888;
 
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: 5% 15% 15% 15% 15% ;
   grid-row-gap: 20px;
-  /* justify-items: center; */
+  justify-items: center;
+}
+
+#modal div{
+  margin: 15px;
+  margin-top: 0;
+  margin-bottom: 0;
+  display: flex;
+  justify-content: center;
 }
 
 #modal span{
@@ -43,6 +55,7 @@ body {
 
 #modal button{
   width: 90%;
+  height: 25px;
   background: #3C3AC2;
   border: none;
   margin: 0;
@@ -56,4 +69,24 @@ body {
   align-items: center;
   border-radius: 12px;
   text-align: center;
+}
+
+#modal:hover{
+  top: 80%;
+  
+  background: #de7878;
+
+  
+}
+
+h3 {
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  font-weight: normal;
+  color: inherit; 
+  background: none;
+  border: none;
+  text-decoration: none;
+  text-align: inherit;
 }
