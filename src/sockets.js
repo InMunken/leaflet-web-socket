@@ -1,22 +1,6 @@
-let Usuarios = [];
-
-let Dibujos = {};
-
 module.exports = (io) => {
+
   io.on("connection", (socket) => {
-    //session management
-    let session = JSON.parse(socket.handshake.query.session); 
-    console.log("usuario conectado con token: ", session.id);
-
-    
-
-
-    // Unir el socket a la sala con el mismo id de la sesión
-    socket.join(session.id, () => {
-      let rooms = Object.keys(socket.rooms);
-      console.log(rooms); // [socket.id, session.id]
-    });
-
 
     console.log("alguien se conectó!");
 
@@ -24,54 +8,12 @@ module.exports = (io) => {
       console.log("alguien se desconectó! :( \n");
     });
 
-    //Envío de información recolectada durante la sesión
-    socket.emit("ingreso-u", Usuarios);
-    console.log(Dibujos[session.id]);
-    if(Dibujos[session.id] != null){
-      console.log("está pasando algo",Dibujos[session.id])
-      socket.emit("ingreso-d", Dibujos[session.id]);
-    }
-
-    
-    if (!Dibujos[session.id]) {
-      Dibujos[session.id] = {
-        data: session.data,
-      };
-    }
-
-    //manejo de evetos de ubicación
-    socket.on("usuarioActualizado", (data) => {
-      io.to(session.id).emit("usuarioConectado", {
-        nombre: data.nombre,
-        latlng: data.latlng,
-      });
-      Usuarios.push(data);
-      console.log("Lista de usuarios: \n", Usuarios);
-    });
-
     //manejo de dibujos
     socket.on("nuevoDibujo", (data) => {
       console.log("dibujo recibido");
-      console.log("make a console log");
       console.log(data);
 
-      if (!Dibujos[session.id]) {
-        Dibujos[session.id] = [];
-      }
-
-      Dibujos[session.id].data.push(data);
-
-      console.log("Lista de dibujos: \n", Dibujos);
-      console.log("enviando al token", session.id);
-
-      socket.broadcast.to(session.id).emit("dibujoDeUser", data);
-    });
-
-    socket.on("UserLocalData", (localData) => {
-      console.log("el usuario a enviado su data local")
-
-      Dibujos[session.id].data.push(localData);
-
+      socket.broadcast.emit("dibujoDeUser", data);
     });
 
   });
