@@ -43,6 +43,11 @@ boton.onclick = function () {
     query: { session: JSON.stringify(session) },
   });
 
+  // It send all the local data to the socket if check box says so
+  if(sendLocal.value == true){
+    checksAndSend("UserLocalData", localData)
+    console.log("Enviando local data", localData)
+  }
 
   // It recibes the whole user list to add the respective markers
   socket.on("ingreso-u", (UserList) => {
@@ -90,7 +95,10 @@ map.on("draw:created", function (e) {
 
   drawFeatures.addLayer(layer);
 
-  var latlng, latlngs, radius;
+  var latlng = null;
+  var latlngs = null;
+  var radius = null;
+  var name = null
 
   if (type === "marker") {
     latlng = layer.getLatLng();
@@ -115,6 +123,7 @@ map.on("draw:created", function (e) {
     latlngs: latlngs,
     latlng: latlng,
     radius: radius,
+    name: null
   };
 
   //localData.push(data);
@@ -149,6 +158,7 @@ function addDraw(data) {
   let layerType = data.layerType;
 
   console.log(data.layerType);
+  
   if (data.layerType === "marker") {
     layer = L.marker([data.latlng.lat, data.latlng.lng], {
       autoPanOnFocus: true,

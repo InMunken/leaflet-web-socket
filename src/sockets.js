@@ -8,11 +8,7 @@ module.exports = (io) => {
     let session = JSON.parse(socket.handshake.query.session); 
     console.log("usuario conectado con token: ", session.id);
 
-    if (!Dibujos[session.id]) {
-      Dibujos[session.id] = {
-        data: session.data,
-      };
-    }
+    
 
 
     // Unir el socket a la sala con el mismo id de la sesión
@@ -31,7 +27,17 @@ module.exports = (io) => {
     //Envío de información recolectada durante la sesión
     socket.emit("ingreso-u", Usuarios);
     console.log(Dibujos[session.id]);
-    socket.emit("ingreso-d", Dibujos[session.id]);
+    if(Dibujos[session.id] != null){
+      console.log("está pasando algo",Dibujos[session.id])
+      socket.emit("ingreso-d", Dibujos[session.id]);
+    }
+
+    
+    if (!Dibujos[session.id]) {
+      Dibujos[session.id] = {
+        data: session.data,
+      };
+    }
 
     //manejo de evetos de ubicación
     socket.on("usuarioActualizado", (data) => {
@@ -60,5 +66,13 @@ module.exports = (io) => {
 
       socket.broadcast.to(session.id).emit("dibujoDeUser", data);
     });
+
+    socket.on("UserLocalData", (localData) => {
+      console.log("el usuario a enviado su data local")
+
+      Dibujos[session.id].data.push(localData);
+
+    });
+
   });
 };
